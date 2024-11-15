@@ -2,10 +2,10 @@
 include 'koneksi.php'; // Pastikan file koneksi.php ada di folder yang sama atau sesuaikan path-nya
 
 // Ambil data dari form
-$tanggal = $_POST['tanggal'];
-$keterangan = $_POST['keterangan'];
-$sumber_dana = $_POST['sumber_dana'];
-$jumlah = $_POST['jumlah'];
+$tanggal = $_POST['tanggal']; // Ambil tanggal dari form
+$nama_hp = $_POST['nama_hp'];
+$merek = $_POST['merek'];
+$model = $_POST['model'];
 
 // Cek koneksi
 if ($conn->connect_error) {
@@ -13,7 +13,7 @@ if ($conn->connect_error) {
 }
 
 // Persiapkan SQL query untuk menyimpan data
-$sql = "INSERT INTO pemasukan (tanggal, keterangan, sumber_dana, jumlah) VALUES (?, ?, ?, ?)";
+$sql = "INSERT INTO produk (tanggal, nama_hp, merek, model) VALUES (?, ?, ?, ?)";
 $stmt = $conn->prepare($sql);
 
 // Cek apakah statement berhasil dipersiapkan
@@ -22,13 +22,13 @@ if ($stmt === false) {
 }
 
 // Bind data ke statement
-$stmt->bind_param("sssd", $tanggal, $keterangan, $sumber_dana, $jumlah); // Menggunakan 'd' untuk tipe data decimal (jumlah)
+$stmt->bind_param("ssss", $tanggal, $nama_hp, $merek, $model);
 
 // Eksekusi statement
 if ($stmt->execute()) {
-    echo '<script>alert("Data berhasil disimpan."); window.location.href="pemasukan.php";</script>';
+    echo '<script>alert("Data produk berhasil disimpan."); window.location.href="produk.php";</script>';
 } else {
-    echo '<script>alert("Error: ' . $stmt->error . '"); window.location.href="index.php";</script>';
+    echo '<script>alert("Error: ' . $stmt->error . '"); window.location.href="tambah_produk.php";</script>';
 }
 
 // Tutup statement dan koneksi

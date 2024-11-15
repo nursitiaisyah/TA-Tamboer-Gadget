@@ -13,10 +13,10 @@ if ($result->num_rows > 0) {
     $_SESSION['username'] = $user['username'];
     $_SESSION['role'] = $user['role'];
 
-    if ($user['role'] == 'admin') {
+    if ($user['role'] == 'pemilik') {
         header("Location: admin/halaman_admin.php");
-    } elseif ($user['role'] == 'kasir') {
-        header("Location: kasir/halaman_kasir.php");
+    } elseif ($user['role'] == 'pegawai') {
+        header("Location: pegawai/halaman_pegawai.php");
     }
 } else {
     echo "Login failed. Invalid username or password.";

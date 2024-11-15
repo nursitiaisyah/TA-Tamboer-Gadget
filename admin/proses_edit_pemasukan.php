@@ -4,8 +4,8 @@ include 'koneksi.php'; // Pastikan file koneksi.php ada di folder yang sama atau
 // Ambil data dari form
 $id = $_POST['id_pemasukan'];
 $tanggal = $_POST['tanggal'];
-$ket_pemasukan = $_POST['ket_pemasukan'];
-$sumber = $_POST['sumber'];
+$keterangan = $_POST['keterangan'];
+$sumber_dana = $_POST['sumber_dana'];
 $jumlah = $_POST['jumlah'];
 
 // Cek koneksi
@@ -14,7 +14,7 @@ if ($conn->connect_error) {
 }
 
 // Persiapkan SQL query untuk memperbarui data
-$sql = "UPDATE pemasukan SET tanggal = ?, ket_pemasukan = ?, sumber = ?, jumlah = ? WHERE id_pemasukan = ?";
+$sql = "UPDATE pemasukan SET tanggal = ?, keterangan = ?, sumber_dana = ?, jumlah = ? WHERE id_pemasukan = ?";
 $stmt = $conn->prepare($sql);
 
 // Cek apakah statement berhasil dipersiapkan
@@ -23,7 +23,7 @@ if ($stmt === false) {
 }
 
 // Bind data ke statement
-$stmt->bind_param("sssii", $tanggal, $ket_pemasukan, $sumber, $jumlah, $id);
+$stmt->bind_param("sssdi", $tanggal, $keterangan, $sumber_dana, $jumlah, $id);
 
 // Eksekusi statement
 if ($stmt->execute()) {

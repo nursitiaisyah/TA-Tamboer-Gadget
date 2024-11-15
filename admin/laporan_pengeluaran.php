@@ -115,10 +115,20 @@
                                     </div>
                                 </div>
                                 <div class="btn-margin-group d-flex justify-content-between">
-                                    <button type="submit" class="btn btn-primary">Filter</button>
+                                    <button type="submit" class="btn btn-primary" style="font-size: 14px;"><i
+                                            class="fas fa-filter"></i> Filter</button>
                                     <div>
-                                        <button type="button" class="btn btn-success" id="exportExcel">Excel</button>
-                                        <button type="button" class="btn btn-danger" id="exportPDF">PDF</button>
+
+                                        <!-- Tombol Export Excel dengan ikon -->
+                                        <button type="button" class="btn btn-success" id="exportExcel"
+                                            style="font-size: 14px;">
+                                            <i class="fas fa-file-excel"></i> Excel
+                                        </button>
+                                        <!-- Tombol Export PDF dengan ikon -->
+                                        <button type="button" class="btn btn-danger" id="exportPDF"
+                                            style="font-size: 14px;">
+                                            <i class="fas fa-file-pdf"></i> PDF
+                                        </button>
                                     </div>
                                 </div>
                             </form>
@@ -128,11 +138,9 @@
                                     <thead>
                                         <tr>
                                             <th scope="col">No</th>
-                                            <th scope="col">Kode</th>
                                             <th scope="col">Tanggal</th>
-                                            <th scope="col">Uraian</th>
+                                            <th scope="col">Keterangan</th>
                                             <th scope="col">Jumlah</th>
-                                            <th scope="col">Satuan</th>
                                             <th scope="col">Hrg. Satuan</th>
                                             <th scope="col">Ttl. Harga</th>
                                         </tr>
@@ -155,17 +163,15 @@
                                             while ($row = $result->fetch_assoc()) {
                                                 echo "<tr>
                                                     <th scope='row'>" . $no++ . "</th>
-                                                    <td>" . $row['id_pengeluaran'] . "</td>
                                                     <td>" . $row['tanggal'] . "</td>
-                                                    <td>" . $row['uraian'] . "</td>
-                                                    <td>" . $row['jumlah'] . "</td>
-                                                    <td>" . $row['satuan'] . "</td>
-                                                    <td>" . number_format($row['harga_satuan'], 0) . "</td>
-                                                    <td>" . number_format($row['total_harga'], 0) . "</td>
+                                                    <td>" . $row['keterangan'] . "</td>
+                                                    <td>" . number_format($row['jumlah'], 0) . "</td>
+                                                    <td>" . number_format($row['harga_satuan'], 2) . "</td>
+                                                    <td>" . number_format($row['total_harga'], 2) . "</td>
                                                 </tr>";
                                             }
                                         } else {
-                                            echo "<tr><td colspan='8' class='text-center'>No data available</td></tr>";
+                                            echo "<tr><td colspan='6' class='text-center'>No data available</td></tr>";
                                         }
                                         $conn->close();
                                         ?>
@@ -200,9 +206,9 @@
         document.getElementById('exportExcel').addEventListener('click', function () {
             var table = $('#example').DataTable();
             var data = table.rows({ search: 'applied' }).data().toArray();
-            var worksheetData = [['No', 'Kode', 'Tanggal', 'Uraian', 'Jumlah', 'Satuan', 'Hrg. Satuan', 'Ttl. Harga']];
+            var worksheetData = [['No', 'Tanggal', 'Keterangan', 'Jumlah', 'Hrg. Satuan', 'Ttl. Harga']];
             data.forEach(function (row, index) {
-                worksheetData.push([index + 1, row[1], row[2], row[3], row[4], row[5], row[6], row[7]]);
+                worksheetData.push([index + 1, row[1], row[2], row[3], row[4], row[5]]);
             });
             var worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
             var workbook = XLSX.utils.book_new();
@@ -221,8 +227,7 @@
             doc.autoTable({
                 html: '#example',
                 startY: 30,
-                headStyles: { fillColor: [0, 0, 0] },
-                styles: { halign: 'center' }
+                headStyles: { fillColor: [52, 58, 64] }
             });
             doc.save('Laporan_Pengeluaran.pdf');
         });

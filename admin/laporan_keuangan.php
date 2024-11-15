@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="light">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Pemasukan</title>
+    <title>Laporan Bulanan</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css">
     <!-- FontAwesome Icons -->
@@ -25,18 +25,10 @@
             table.dataTable tbody td {
                 font-size: 11px;
             }
-
-            table.dataTable thead th {
-                font-size: 11px;
-            }
         }
 
         @media (min-width: 769px) {
             table.dataTable tbody td {
-                font-size: 14px;
-            }
-
-            table.dataTable thead th {
                 font-size: 14px;
             }
         }
@@ -45,74 +37,70 @@
             min-width: 70px;
         }
 
-        .form-control-sm {
-            max-width: 200px;
+        /* Adjust the width of the month select box */
+        #month {
+            max-width: 120px;
+            font-size: 14px;
+            /* Set font size for month dropdown */
         }
 
-        .form-control-date {
-            max-width: 119px;
-        }
-
-        .btn-margin-group {
-            margin: 10px 0;
-        }
-
-        /* Custom table border styles */
-        .custom-table th,
-        .custom-table td {
-            border-bottom: 1px solid #dee2e6;
-        }
-
-        .custom-table thead th {
-            border-top: 1px solid #dee2e6;
+        #year {
+            max-width: 80px;
         }
     </style>
+
 </head>
 
 <body>
     <div class="wrapper">
         <!-- Sidebar -->
         <?php include 'sidebar.php'; ?>
-
         <!-- Main Content -->
         <div class="main">
             <!-- Navbar -->
             <?php include 'navbar.php'; ?>
 
-            <!-- Main Content Area -->
             <main class="content px-3 py-2">
                 <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-12 col-md-6 d-flex">
-                        </div>
-                        <div class="col-12 col-md-6 d-flex">
-                        </div>
-                    </div>
                     <div class="card border-0">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="card-title mb-0">Laporan Pemasukan</h5>
-                            <button type="button" class="btn btn-secondary btn-margin" onclick="window.history.back()">
+                            <h5 class="card-title mb-0">Laporan Keuangan</h5>
+                            <button type="button" class="btn btn-secondary" onclick="window.history.back()">
                                 <i class="fas fa-arrow-left"></i>
                             </button>
                         </div>
 
                         <div class="card-body">
-                            <form action="" method="POST">
+                            <form action="laporan_keuangan.php" method="get">
                                 <div class="row mb-3">
                                     <div class="col-12 d-flex align-items-center">
-                                        <label for="tanggal_dari" class="form-label">Dari</label>
-                                        <input type="date" class="form-control form-control-sm form-control-date"
-                                            id="tanggal_dari" name="tanggal_dari" required>
+                                        <label for="month" class="form-label">Bulan:</label>
+                                        <select id="month" name="month" class="form-select">
+                                            <option value="0">Pilih Bulan</option>
+                                            <option value="01">Januari</option>
+                                            <option value="02">Februari</option>
+                                            <option value="03">Maret</option>
+                                            <option value="04">April</option>
+                                            <option value="05">Mei</option>
+                                            <option value="06">Juni</option>
+                                            <option value="07">Juli</option>
+                                            <option value="08">Agustus</option>
+                                            <option value="09">September</option>
+                                            <option value="10">Oktober</option>
+                                            <option value="11">November</option>
+                                            <option value="12">Desember</option>
+                                        </select>
                                     </div>
                                 </div>
+
+
                                 <div class="row mb-3">
                                     <div class="col-12 d-flex align-items-center">
-                                        <label for="tanggal_hingga" class="form-label">Hingga</label>
-                                        <input type="date" class="form-control form-control-sm form-control-date"
-                                            id="tanggal_hingga" name="tanggal_hingga" required>
+                                        <label for="year" class="form-label">Tahun:</label>
+                                        <input type="number" id="year" name="year" class="form-control form-control-sm"
+                                            min="2020" max="2099" step="1" value="<?php echo date('Y'); ?>">
                                     </div>
                                 </div>
-                                <!-- Tombol Filter dan Refresh -->
                                 <div class="d-flex justify-content-between">
                                     <div>
                                         <button type="submit" class="btn btn-primary" style="font-size: 14px;"><i
@@ -132,56 +120,57 @@
                                     </div>
                                 </div>
                             </form>
-                            </form>
+
                             <div class="table-responsive mt-3">
                                 <table id="example" class="table table-striped custom-table">
                                     <thead>
                                         <tr>
                                             <th scope="col">No</th>
-
-                                            <th scope="col">Tanggal</th>
-                                            <th scope="col">Keterangan</th>
-                                            <th scope="col">Sumber</th>
-                                            <th scope="col">Jumlah</th>
+                                            <th scope="col">Bulan</th>
+                                            <th scope="col">Tahun</th>
+                                            <th scope="col">Total Pemasukan</th>
+                                            <th scope="col">Total Pengeluaran</th>
+                                            <th scope="col">Total Penjualan</th>
+                                            <th scope="col">Keuntungan</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
                                         include 'koneksi.php';
-                                        $tanggal_dari = isset($_POST['tanggal_dari']) ? $_POST['tanggal_dari'] : '';
-                                        $tanggal_hingga = isset($_POST['tanggal_hingga']) ? $_POST['tanggal_hingga'] : '';
+                                        $month = isset($_GET['month']) ? $_GET['month'] : date('m');
+                                        $year = isset($_GET['year']) ? $_GET['year'] : date('Y');
 
-                                        if (!empty($tanggal_dari) && !empty($tanggal_hingga)) {
-                                            $sql = "SELECT * FROM pemasukan WHERE tanggal BETWEEN '$tanggal_dari' AND '$tanggal_hingga'";
-                                        } else {
-                                            $sql = "SELECT * FROM pemasukan";
-                                        }
+                                        $month_name = date('F', mktime(0, 0, 0, $month, 10));
 
-                                        $result = $conn->query($sql);
-                                        if ($result->num_rows > 0) {
-                                            $no = 1;
-                                            while ($row = $result->fetch_assoc()) {
-                                                echo "<tr>
-                                                    <th scope='row'>" . $no++ . "</th>
-                                                    
-                                                    <td>" . $row['tanggal'] . "</td>
-                                                    <td>" . $row['keterangan'] . "</td>
-                                                    <td>" . $row['sumber_dana'] . "</td>
-                                                    <td>" . number_format($row['jumlah'], 0) . "</td>
-                                                </tr>";
-                                            }
-                                        } else {
-                                            echo "<tr><td colspan='6' class='text-center'>No data available</td></tr>";
-                                        }
-                                        $conn->close();
+                                        $sql_pemasukan = "SELECT SUM(jumlah) AS total_pemasukan FROM pemasukan WHERE MONTH(tanggal) = '$month' AND YEAR(tanggal) = '$year'";
+                                        $result_pemasukan = $conn->query($sql_pemasukan);
+                                        $total_pemasukan = $result_pemasukan->fetch_assoc()['total_pemasukan'] ?? 0;
+
+                                        $sql_pengeluaran = "SELECT SUM(total_harga) AS total_pengeluaran FROM pengeluaran WHERE MONTH(tanggal) = '$month' AND YEAR(tanggal) = '$year'";
+                                        $result_pengeluaran = $conn->query($sql_pengeluaran);
+                                        $total_pengeluaran = $result_pengeluaran->fetch_assoc()['total_pengeluaran'] ?? 0;
+
+                                        $sql_penjualan = "SELECT SUM(total_harga) AS total_penjualan FROM penjualan WHERE MONTH(tanggal) = '$month' AND YEAR(tanggal) = '$year'";
+                                        $result_penjualan = $conn->query($sql_penjualan);
+                                        $total_penjualan = $result_penjualan->fetch_assoc()['total_penjualan'] ?? 0;
+
+                                        $keuntungan = $total_penjualan - $total_pengeluaran;
+
+                                        echo "<tr>
+                                    <td>1</td>
+                                    <td>$month_name</td>
+                                    <td>$year</td>
+                                    <td>" . number_format($total_pemasukan, 0, ',', '.') . "</td>
+                                    <td>" . number_format($total_pengeluaran, 0, ',', '.') . "</td>
+                                    <td>" . number_format($total_penjualan, 0, ',', '.') . "</td>
+                                    <td>" . number_format($keuntungan, 0, ',', '.') . "</td>
+                                </tr>";
                                         ?>
                                     </tbody>
                                 </table>
                             </div>
-
                         </div>
-                    </div>
-                </div>
+
             </main>
         </div>
     </div>
@@ -207,21 +196,22 @@
         document.getElementById('exportExcel').addEventListener('click', function () {
             var table = $('#example').DataTable();
             var data = table.rows({ search: 'applied' }).data().toArray();
-            var worksheetData = [['No', 'Kode', 'Tanggal', 'Keterangan', 'Sumber', 'Jumlah']];
+            var worksheetData = [["No", "Bulan", "Tahun", "Total Pemasukan", "Total Pengeluaran", "Total Penjualan", "Keuntungan"]];
             data.forEach(function (row, index) {
-                worksheetData.push([index + 1, row[1], row[2], row[3], row[4], row[5]]);
+                worksheetData.push([index + 1, row[1], row[2], row[3], row[4], row[5], row[4]]);
             });
             var worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
             var workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, 'Laporan');
-            XLSX.writeFile(workbook, 'Laporan_Pemasukan.xlsx');
+            XLSX.writeFile(workbook, 'Laporan_Keuangan.xlsx');
         });
+
 
         document.getElementById('exportPDF').addEventListener('click', function () {
             var { jsPDF } = window.jspdf;
             var doc = new jsPDF();
             var pageWidth = doc.internal.pageSize.getWidth();
-            var title = "LAPORAN PEMASUKAN";
+            var title = "LAPORAN KEUANGAN TAMBOER GADGET";
             var textWidth = doc.getTextWidth(title);
             var x = (pageWidth - textWidth) / 2;
             doc.text(title, x, 20);
@@ -231,7 +221,7 @@
                 headStyles: { fillColor: [0, 0, 0] },
                 styles: { halign: 'center' }
             });
-            doc.save('Laporan_Pemasukan.pdf');
+            doc.save('Laporan_Keuangan.pdf');
         });
     </script>
 </body>

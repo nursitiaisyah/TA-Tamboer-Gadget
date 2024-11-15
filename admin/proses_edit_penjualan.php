@@ -1,22 +1,23 @@
 <?php
-include 'koneksi.php'; // Pastikan file koneksi.php ada di folder yang sama atau sesuaikan path-nya
+include 'koneksi.php';
 
 // Ambil data dari form
-$id = $_POST['id_penjualan'];
+$id_penjualan = $_POST['id_penjualan'];
 $tanggal = $_POST['tanggal'];
-$jumlah_produksi = $_POST['jumlah_produksi'];
-$terjual = $_POST['terjual'];
-$harga_perbungkus = $_POST['harga_perbungkus'];
-$sisa = $jumlah_produksi - $terjual;
-$hasil_pendapatan = $terjual * $harga_perbungkus;
+$id_varian = $_POST['id_varian'];
+$id_user = $_POST['id_user'];
+$harga_jual = $_POST['harga_jual'];
+$jumlah = $_POST['jumlah'];
+$total_harga = $harga_jual * $jumlah;  // Menghitung total harga
+$metode_pembayaran = $_POST['metode_pembayaran'];
 
 // Cek koneksi
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Persiapkan SQL query untuk memperbarui data
-$sql = "UPDATE penjualan SET tanggal = ?, jumlah_produksi = ?, terjual = ?, sisa = ?, harga_perbungkus = ?, hasil_pendapatan = ? WHERE id_penjualan = ?";
+// Persiapkan SQL query untuk memperbarui data penjualan
+$sql = "UPDATE penjualan SET tanggal = ?, id_varian = ?, id_user = ?, harga_jual = ?, jumlah = ?, total_harga = ?, metode_pembayaran = ? WHERE id_penjualan = ?";
 $stmt = $conn->prepare($sql);
 
 // Cek apakah statement berhasil dipersiapkan
@@ -25,11 +26,11 @@ if ($stmt === false) {
 }
 
 // Bind data ke statement
-$stmt->bind_param("siiiidi", $tanggal, $jumlah_produksi, $terjual, $sisa, $harga_perbungkus, $hasil_pendapatan, $id);
+$stmt->bind_param("siidiisi", $tanggal, $id_varian, $id_user, $harga_jual, $jumlah, $total_harga, $metode_pembayaran, $id_penjualan);
 
 // Eksekusi statement
 if ($stmt->execute()) {
-    echo '<script>alert("Data berhasil diperbarui."); window.location.href="penjualan.php";</script>';
+    echo '<script>alert("Data penjualan berhasil diperbarui."); window.location.href="penjualan.php";</script>';
 } else {
     echo '<script>alert("Error: ' . $stmt->error . '"); window.location.href="penjualan.php";</script>';
 }

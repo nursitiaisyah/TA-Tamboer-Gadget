@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -52,76 +52,69 @@
             <main class="content px-3 py-2">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-12 col-md-6 d-flex">
-                        </div>
-                        <div class="col-12 col-md-6 d-flex">
-                        </div>
-                    </div>
+                        <div class="col-12">
+                            <div class="card border-0">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0">Data Pemasukan</h5>
+                                    <a href="tambah_pemasukan.php" class="btn btn-primary">
+                                        <i class="fas fa-plus"></i>
+                                    </a>
+                                </div>
 
-                    <!-- Table Element -->
-                    <div class="card border-0">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="card-title mb-0">Data Pemasukan</h5>
-                            <a href="tambah_pemasukan.php" class="btn btn-primary">
-                                <i class="fas fa-plus"></i>
-                            </a>
-                        </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table id="example" class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
 
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table id="example" class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">No</th>
-                                            <th scope="col">Kode</th>
-                                            <th scope="col">Tanggal</th>
-                                            <th scope="col">Keterangan</th>
-                                            <th scope="col">Sumber</th>
-                                            <th scope="col">Jumlah</th>
-                                            <th scope="col">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        include 'koneksi.php';
-                                        $sql = "SELECT * FROM pemasukan";
-                                        $result = $conn->query($sql);
-                                        if ($result->num_rows > 0) {
-                                            $no = 1;
-                                            while ($row = $result->fetch_assoc()) {
-                                                echo "<tr>
-                                                    <th scope='row'>" . $no++ . "</th>
-                                                    <td>" . $row['id_pemasukan'] . "</td>
-                                                    <td>" . $row['tanggal'] . "</td>
-                                                    <td>" . $row['ket_pemasukan'] . "</td>
-                                                    <td>" . $row['sumber'] . "</td>
-                                                    <td>" . number_format($row['jumlah'], 0) . "</td>
-                                                    <td>
-                                                        <a href='edit_pemasukan.php?id=" . $row['id_pemasukan'] . "' class='btn btn-outline-primary btn-sm'>
-                                                            <i class='fas fa-pencil-alt'></i>
-                                                        </a>
-                                                        <button class='btn btn-outline-danger btn-sm' onclick='confirmDelete(" . $row['id_pemasukan'] . ")'>
-                                                            <i class='fas fa-trash'></i>
-                                                        </button>
-                                                    </td>
-                                                </tr>";
-                                            }
-                                        } else {
-                                            echo "<tr><td colspan='7' class='text-center'>No data available</td></tr>";
-                                        }
-                                        $conn->close();
-                                        ?>
-                                    </tbody>
-                                </table>
+                                                    <th>Tanggal</th>
+                                                    <th>Keterangan</th>
+                                                    <th>Sumber Dana</th>
+                                                    <th>Jumlah</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                include 'koneksi.php';
+                                                $sql = "SELECT * FROM pemasukan";
+                                                $result = $conn->query($sql);
+                                                if ($result->num_rows > 0) {
+                                                    $no = 1;
+                                                    while ($row = $result->fetch_assoc()) {
+                                                        echo "<tr>
+                                                            <td>" . $no++ . "</td>
+                                                            
+                                                            <td>" . $row['tanggal'] . "</td>
+                                                            <td>" . $row['keterangan'] . "</td>
+                                                            <td>" . $row['sumber_dana'] . "</td>
+                                                            <td>" . number_format($row['jumlah'], 0) . "</td>
+                                                            <td>
+                                                                <a href='edit_pemasukan.php?id=" . $row['id_pemasukan'] . "' class='btn btn-outline-primary btn-sm'>
+                                                                    <i class='fas fa-pencil-alt'></i>
+                                                                </a>
+                                                                <button class='btn btn-outline-danger btn-sm' onclick='confirmDelete(" . $row['id_pemasukan'] . ")'>
+                                                                    <i class='fas fa-trash'></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>";
+                                                    }
+                                                } else {
+                                                    echo "<tr><td colspan='7' class='text-center'>Data tidak tersedia</td></tr>";
+                                                }
+                                                $conn->close();
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </main>
-            <!-- Theme Toggle -->
-            <a href="#" class="theme-toggle">
-                <i class="fa-regular fa-sun"></i>
-            </a>
+
             <!-- Footer -->
             <footer class="footer">
                 <div class="container-fluid">
@@ -135,6 +128,7 @@
             </footer>
         </div>
     </div>
+
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"></script>
     <!-- jQuery -->

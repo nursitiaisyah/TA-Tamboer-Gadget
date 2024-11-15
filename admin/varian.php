@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Pengeluaran</title>
+    <title>Data Varian</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css">
     <!-- FontAwesome Icons -->
@@ -61,64 +61,72 @@
                     <!-- Table Element -->
                     <div class="card border-0">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="card-title mb-0">Data Pengeluaran</h5>
-                            <a href="tambah_pengeluaran.php" class="btn btn-primary">
+                            <h5 class="card-title mb-0">Data Varian</h5>
+                            <a href="tambah_varian.php" class="btn btn-primary">
                                 <i class="fas fa-plus"></i>
                             </a>
                         </div>
 
-                        <!-- Tabel Data Pengeluaran -->
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table id="example" class="table table-striped">
                                     <thead>
                                         <tr>
                                             <th scope="col">No</th>
-
-                                            <th scope="col">Tanggal</th>
-                                            <th scope="col">Keterangan</th>
-                                            <th scope="col">Jumlah</th>
-                                            <th scope="col">Harga Satuan</th>
-                                            <th scope="col">Total Harga</th>
+                                            <th scope="col">Nama HP</th>
+                                            <th scope="col">RAM</th>
+                                            <th scope="col">Warna</th>
+                                            <th scope="col">Penyimpanan</th>
+                                            <th scope="col">Kondisi</th> <!-- Tambahkan kolom Kondisi -->
+                                            <th scope="col">Harga Masuk</th>
+                                            <th scope="col">Harga Jual</th>
+                                            <th scope="col">Stok</th>
+                                            <th scope="col">Status</th>
                                             <th scope="col">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
                                         include 'koneksi.php';
-                                        $sql = "SELECT * FROM pengeluaran";
+                                        $sql = "SELECT * FROM varian INNER JOIN produk ON varian.id_produk = produk.id_produk";
                                         $result = $conn->query($sql);
                                         if ($result->num_rows > 0) {
                                             $no = 1;
                                             while ($row = $result->fetch_assoc()) {
+                                                // Menentukan status berdasarkan stok
+                                                $status = $row['stok'] > 0 ? 'Tersedia' : 'Kosong';
+
                                                 echo "<tr>
-                            <th scope='row'>" . $no++ . "</th>
-                            
-                            <td>" . $row['tanggal'] . "</td>
-                            <td>" . $row['keterangan'] . "</td> <!-- Sesuaikan dengan nama kolom 'Keterangan' -->
-                            <td>" . $row['jumlah'] . "</td>
-                            <td>" . number_format($row['harga_satuan'], 0) . "</td>
-                            <td>" . number_format($row['total_harga'], 0) . "</td>
-                            <td>
-                                <a href='edit_pengeluaran.php?id=" . $row['id_pengeluaran'] . "' class='btn btn-outline-primary btn-sm'>
-                                    <i class='fas fa-pencil-alt'></i>
-                                </a>
-                                <button class='btn btn-outline-danger btn-sm' onclick='confirmDelete(" . $row['id_pengeluaran'] . ")'>
-                                    <i class='fas fa-trash'></i>
-                                </button>
-                            </td>
-                        </tr>";
+                                                <th scope='row'>" . $no++ . "</th>
+                                            <td>" . $row['nama_hp'] . "</td>
+<td>" . $row['ram'] . "</td>
+<td>" . $row['warna'] . "</td>
+<td>" . $row['penyimpanan'] . "</td>
+<td>" . ucfirst($row['kondisi']) . "</td> <!-- Menampilkan kondisi barang -->
+<td>Rp " . number_format($row['harga_masuk'], 0, ',', '.') . "</td>
+<td>Rp " . number_format($row['harga_jual'], 0, ',', '.') . "</td>
+<td>" . $row['stok'] . "</td>
+<td>" . $status . "</td>
+<td>
+<a href='edit_varian.php?id=" . $row['id_varian'] . "' class='btn btn-outline-primary btn-sm'>
+<i class='fas fa-pencil-alt'></i>
+</a>
+<button class='btn btn-outline-danger btn-sm' onclick='confirmDelete(" . $row['id_varian'] . ")'>
+<i class='fas fa-trash'></i>
+</button>
+</td>
+</tr>";
                                             }
                                         } else {
-                                            echo "<tr><td colspan='8' class='text-center'>No data available</td></tr>";
+                                            echo "<tr><td colspan='11' class='text-center'>No data available</td></tr>"; // Update colspan
                                         }
                                         $conn->close();
                                         ?>
                                     </tbody>
+
                                 </table>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </main>
@@ -156,7 +164,7 @@
 
         function confirmDelete(id) {
             if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
-                window.location.href = 'hapus_pengeluaran.php?id=' + id;
+                window.location.href = 'hapus_varian.php?id=' + id;
             }
         }
     </script>

@@ -2,7 +2,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "pecel_cak_ipoel";
+$dbname = "db_tamboer_gadget1";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);

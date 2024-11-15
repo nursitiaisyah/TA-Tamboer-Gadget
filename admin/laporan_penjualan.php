@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="light">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Penjualan</title>
+    <title>Laporan Pengeluaran</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css">
     <!-- FontAwesome Icons -->
@@ -88,6 +88,8 @@
                         <div class="col-12 col-md-6 d-flex">
                         </div>
                     </div>
+
+                    <!-- Table Element -->
                     <div class="card border-0">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 class="card-title mb-0">Laporan Penjualan</h5>
@@ -112,11 +114,25 @@
                                             id="tanggal_hingga" name="tanggal_hingga" required>
                                     </div>
                                 </div>
-                                <div class="btn-margin-group d-flex justify-content-between">
-                                    <button type="submit" class="btn btn-primary">Filter</button>
+                                <!-- Akhir Tanggal Dari dan Hingga -->
+
+                                <!-- Tombol Filter dan Refresh -->
+                                <div class="d-flex justify-content-between">
                                     <div>
-                                        <button type="button" class="btn btn-success" id="exportExcel">Excel</button>
-                                        <button type="button" class="btn btn-danger" id="exportPDF">PDF</button>
+                                        <button type="submit" class="btn btn-primary" style="font-size: 14px;"><i
+                                                class="fas fa-filter"></i> Filter</button>
+                                    </div>
+                                    <div>
+                                        <!-- Tombol Export Excel dengan ikon -->
+                                        <button type="button" class="btn btn-success" id="exportExcel"
+                                            style="font-size: 14px;">
+                                            <i class="fas fa-file-excel"></i> Excel
+                                        </button>
+                                        <!-- Tombol Export PDF dengan ikon -->
+                                        <button type="button" class="btn btn-danger" id="exportPDF"
+                                            style="font-size: 14px;">
+                                            <i class="fas fa-file-pdf"></i> PDF
+                                        </button>
                                     </div>
                                 </div>
                             </form>
@@ -125,13 +141,13 @@
                                     <thead>
                                         <tr>
                                             <th scope="col">No</th>
-                                            <th scope="col">Kode Jual</th>
                                             <th scope="col">Tanggal</th>
-                                            <th scope="col">Produksi</th>
-                                            <th scope="col">Terjual</th>
-                                            <th scope="col" class="d-none d-md-table-cell">Sisa</th>
-                                            <th scope="col">Harga</th>
-                                            <th scope="col">Hasil</th>
+                                            <th scope="col">Varian</th>
+                                            <th scope="col">Pengguna</th>
+                                            <th scope="col">Harga Jual</th>
+                                            <th scope="col">Jumlah</th>
+                                            <th scope="col">Total</th>
+                                            <th scope="col">Pembayaran</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -140,10 +156,15 @@
                                         $tanggal_dari = isset($_POST['tanggal_dari']) ? $_POST['tanggal_dari'] : '';
                                         $tanggal_hingga = isset($_POST['tanggal_hingga']) ? $_POST['tanggal_hingga'] : '';
 
+                                        $sql = "SELECT p.tanggal, CONCAT(prod.nama_hp, ' / ', v.ram, ' / ', v.penyimpanan, ' / ', v.warna) AS varian, 
+                                                u.nama AS pengguna, p.harga_jual, p.jumlah, p.total_harga, p.metode_pembayaran 
+                                                FROM penjualan p
+                                                JOIN varian v ON p.id_varian = v.id_varian
+                                                JOIN produk prod ON v.id_produk = prod.id_produk
+                                                JOIN users u ON p.id_user = u.id_user";
+
                                         if (!empty($tanggal_dari) && !empty($tanggal_hingga)) {
-                                            $sql = "SELECT * FROM penjualan WHERE tanggal BETWEEN '$tanggal_dari' AND '$tanggal_hingga'";
-                                        } else {
-                                            $sql = "SELECT * FROM penjualan";
+                                            $sql .= " WHERE p.tanggal BETWEEN '$tanggal_dari' AND '$tanggal_hingga'";
                                         }
 
                                         $result = $conn->query($sql);
@@ -152,13 +173,13 @@
                                             while ($row = $result->fetch_assoc()) {
                                                 echo "<tr>
                                                     <th scope='row'>" . $no++ . "</th>
-                                                    <td>" . $row['id_penjualan'] . "</td>
                                                     <td>" . $row['tanggal'] . "</td>
-                                                    <td>" . $row['jumlah_produksi'] . "</td>
-                                                    <td>" . $row['terjual'] . "</td>
-                                                    <td class='d-none d-md-table-cell'>" . $row['sisa'] . "</td>
-                                                    <td>" . number_format($row['harga_perbungkus'], 0) . "</td>
-                                                    <td>" . number_format($row['hasil_pendapatan'], 0) . "</td>
+                                                    <td>" . $row['varian'] . "</td>
+                                                    <td>" . $row['pengguna'] . "</td>
+                                                    <td>Rp " . number_format($row['harga_jual'], 0, ',', '.') . "</td>
+                                                    <td>" . $row['jumlah'] . "</td>
+                                                    <td>Rp " . number_format($row['total_harga'], 0, ',', '.') . "</td>
+                                                    <td>" . $row['metode_pembayaran'] . "</td>
                                                 </tr>";
                                             }
                                         } else {
@@ -169,7 +190,6 @@
                                     </tbody>
                                 </table>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -195,33 +215,30 @@
             });
         });
 
+        function resetForm() {
+            // Reset semua input dalam form dengan ID tertentu
+            document.getElementById("filterForm").reset();
+            // Reload halaman setelah mereset form untuk mengembalikan data ke setelan semula
+            location.reload();
+        }
+
         document.getElementById('exportExcel').addEventListener('click', function () {
             var table = $('#example').DataTable();
             var data = table.rows({ search: 'applied' }).data().toArray();
-            var worksheetData = [['No', 'Kode Jual', 'Tanggal', 'Produksi', 'Terjual', 'Sisa', 'Harga', 'Hasil']];
+            var worksheetData = [['No', 'Tanggal', 'Varian', 'Pengguna', 'Harga Jual', 'Jumlah', 'Total', 'Pembayaran']];
             data.forEach(function (row, index) {
                 worksheetData.push([index + 1, row[1], row[2], row[3], row[4], row[5], row[6], row[7]]);
             });
             var worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
             var workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, 'Laporan');
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Laporan Penjualan');
             XLSX.writeFile(workbook, 'Laporan_Penjualan.xlsx');
         });
 
         document.getElementById('exportPDF').addEventListener('click', function () {
-            var { jsPDF } = window.jspdf;
+            const { jsPDF } = window.jspdf;
             var doc = new jsPDF();
-            var pageWidth = doc.internal.pageSize.getWidth();
-            var title = "LAPORAN PENJUALAN";
-            var textWidth = doc.getTextWidth(title);
-            var x = (pageWidth - textWidth) / 2;
-            doc.text(title, x, 20);
-            doc.autoTable({
-                html: '#example',
-                startY: 30,
-                headStyles: { fillColor: [0, 0, 0] },
-                styles: { halign: 'center' }
-            });
+            doc.autoTable({ html: '#example' });
             doc.save('Laporan_Penjualan.pdf');
         });
     </script>

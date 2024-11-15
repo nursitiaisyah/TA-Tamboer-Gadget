@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="light">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -15,24 +15,18 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/style.css">
     <style>
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
         .form-label {
-            min-width: 150px;
-            /* Sesuaikan dengan lebar yang diinginkan */
+            min-width: 110px;
         }
 
         .form-control-sm {
-            max-width: 200px;
-            /* Sesuaikan dengan lebar yang diinginkan */
-        }
-
-        .form-control-date {
-            max-width: 119px;
-            /* Sesuaikan dengan lebar yang diinginkan untuk kolom tanggal */
-        }
-
-        .form-control-amount {
-            max-width: 120px;
-            /* Sesuaikan dengan lebar yang diinginkan */
+            max-width: 300px;
         }
     </style>
 </head>
@@ -50,52 +44,73 @@
             <!-- Main Content Area -->
             <main class="content px-3 py-2">
                 <div class="container-fluid">
-                    <div class="row">
-                    </div>
                     <div class="card border-0">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 class="card-title mb-1">Tambah Pemasukan</h5>
                         </div>
-                        <!-- Form Element -->
-                        <div class="card border-0">
-                            <div class="card-body">
-                                <form action="proses_tambah_pemasukan.php" method="POST">
-                                    <div class="row mb-3">
-                                        <div class="col-12 d-flex align-items-center">
-                                            <label for="tanggal" class="form-label">Tanggal</label>
-                                            <input type="date" class="form-control form-control-sm form-control-date"
-                                                id="tanggal" name="tanggal" required>
-                                        </div>
+                        <div class="card-body">
+                            <form action="proses_tambah_pemasukan.php" method="POST">
+
+                                <!-- Tanggal -->
+                                <div class="form-group">
+                                    <label for="tanggal" class="form-label">Tanggal</label>
+                                    <input type="date" class="form-control form-control-sm form-control-date"
+                                        id="tanggal" name="tanggal" required style="max-width: 110px;">
+                                </div>
+
+
+                                <!-- Keterangan -->
+                                <div class="row mb-3">
+                                    <div class="col-12 d-flex align-items-center">
+                                        <!-- Label untuk input keterangan -->
+                                        <label for="keterangan" class="form-label">Keterangan</label>
+                                        <!-- Input untuk keterangan (teks) -->
+                                        <input type="text" class="form-control form-control-sm" id="keterangan"
+                                            name="keterangan" required>
                                     </div>
-                                    <div class="row mb-3">
-                                        <div class="col-12 d-flex align-items-center">
-                                            <label for="ket_pemasukan" class="form-label">Ket. Pemasukan</label>
-                                            <input type="text" class="form-control form-control-sm" id="ket_pemasukan"
-                                                name="ket_pemasukan" required>
-                                        </div>
+                                </div>
+
+                                <!-- Sumber Dana -->
+                                <div class="row mb-3">
+                                    <div class="col-12 d-flex align-items-center">
+                                        <!-- Label untuk input sumber dana -->
+                                        <label for="sumber_dana" class="form-label">Sumber Dana</label>
+                                        <!-- Input untuk sumber dana (teks) -->
+                                        <input type="text" class="form-control form-control-sm" id="sumber_dana"
+                                            name="sumber_dana" required>
                                     </div>
-                                    <div class="row mb-3">
-                                        <div class="col-12 d-flex align-items-center">
-                                            <label for="sumber" class="form-label">Sumber</label>
-                                            <input type="text" class="form-control form-control-sm" id="sumber"
-                                                name="sumber" required>
-                                        </div>
+                                </div>
+
+                                <!-- Jumlah -->
+                                <div class="row mb-3">
+                                    <div class="col-12 d-flex align-items-center">
+                                        <!-- Label untuk input jumlah -->
+                                        <label for="jumlah" class="form-label">Jumlah</label>
+                                        <!-- Input untuk jumlah (angka, dengan langkah 0.01) -->
+                                        <input type="number" step="0.01"
+                                            class="form-control form-control-sm form-control-amount" id="jumlah"
+                                            name="jumlah" required>
                                     </div>
-                                    <div class="row mb-3">
-                                        <div class="col-12 d-flex align-items-center">
-                                            <label for="jumlah" class="form-label">Jumlah</label>
-                                            <input type="number"
-                                                class="form-control form-control-sm form-control-amount" id="jumlah"
-                                                name="jumlah" required>
-                                        </div>
-                                    </div>
-                                    <button type="button" class="btn btn-secondary"
-                                        onclick="window.history.back()">Kembali</button>
-                                    <button type="submit" class="btn btn-primary">Simpan</button>
-                                </form>
-                            </div>
+                                </div>
+
+
+                                <!-- Tombol Aksi -->
+                                <div class="d-flex justify-content-start">
+                                    <!-- Tombol Kembali -->
+                                    <button type="button" class="btn btn-secondary me-2" onclick="window.history.back()"
+                                        style="font-size: 14px;">
+                                        <i class="fas fa-arrow-left"></i> Kembali
+                                    </button>
+                                    <!-- Tombol Simpan -->
+                                    <button type="submit" class="btn btn-primary" style="font-size: 14px;">
+                                        <i class="fas fa-save"></i> Simpan
+                                    </button>
+                                </div>
+
+                            </form>
                         </div>
                     </div>
+                </div>
             </main>
         </div>
     </div>
